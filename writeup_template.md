@@ -89,8 +89,9 @@ Here's a [link to my video result](./project_video.mp4)
 
 
 Besides the vehicle detection, I also added my previous implementation of lane detection into the video. 
-TO ADD
 
+
+See 'project_video_output.mp4'. 
 
 
 
