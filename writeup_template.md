@@ -61,11 +61,9 @@ I also used YCrCb colorspace.
 
 I normalized the feature with  StandardScaler from sklearn.preprocessing. 
 
+I started by reading in all the `vehicle` and `non-vehicle` images. I then shuffled them to ensure to not have time-series data implications. 
 
-
-I started by reading in all the `vehicle` and `non-vehicle` images. I then shuffled them to ensure to not have time-series data implications. Since I had a lot of challenges with False Positives, I ended up using a 10:1 ration between non-vehicle and vehicle images for training. 
-
-
+I split up the training and validation test 70:30.
 
 ###Sliding Window Search
 
@@ -77,8 +75,7 @@ I played a lot around with the sliding window. I found that a big window size (1
 
 
 Note: I tried various things to overcome false positives, e.g. I tried class_weight parameter in my svc but it didn't really work... # svc = svm.SVC(kernel='linear', class_weight={0:.01, 1:.99})
-So I ended uo up just using a normal svc with fine tuning the C parameter of SVC classifier. C controls the training accuracy and generalization. I tried to lower the values starting from 0.01 all the way to  C=0.0001 in the end. 
-'svc = svm.SVC(kernel='linear')''
+So I ended up just using a normal svc with fine tuning the C parameter of SVC classifier. C controls the training accuracy and generalization. I tried to lower the values starting from 0.01 all the way to  C=0.0001 which I eventually used.  
 
 svc = svm.SVC(C=0.0001, kernel='linear')
 
@@ -90,14 +87,10 @@ For result images please check: ./report_images folder
 ### Video Implementation
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./project_video_new.mp4)
 
 
 Besides the vehicle detection, I also added my previous implementation of lane detection into the video. 
-
-
-See 'project_video_output.mp4'. 
-
 
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
@@ -106,15 +99,8 @@ I recorded the positions of positive detections in each frame of the video.  Fro
 I then accumulated the heatmap from the last 10 frames and took the average. (see d.append(heatmap) in the code)
 I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the averaged heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
 
-        
-
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
-
-### Here are 4 frames and their corresponding heatmaps:
-
-For result images please check: ./report_images folder
-
-![alt text][image5]
+Here's an example result showing the heatmap from a 10-series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
+./report_images folder/heatmap of 10 subsequent frames.png
 
 
 ---
@@ -122,8 +108,6 @@ For result images please check: ./report_images folder
 ###Discussion
 
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
--- I still see a lot of false positives. So 
-	 I could defintely improve the classifier. e.g. play with different kernels or play with class_weights which would reduce a 'car' prediction
 
 - currently my detector runs very slowly. So generating a hog_features per image rather than per window would increase the performance.
 
